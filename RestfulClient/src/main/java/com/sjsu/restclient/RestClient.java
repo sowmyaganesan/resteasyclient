@@ -2,6 +2,9 @@ package com.sjsu.restclient;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 
@@ -30,8 +33,9 @@ public class RestClient {
 		//deleteUser();
 		//signin();
 		//invitefriends();
-		addfriends();
-		//removefriends();
+		//addTrustscoretofriend();
+		//removefriendfromtrustnw();
+		updateTrustscoretofriend();
 		//getauserbookmark();
 	}
 	
@@ -80,8 +84,11 @@ public class RestClient {
 
     {
     	Inviteemails inviteemails = new Inviteemails();
-    	 String[] to = {"sowmister@gmail.com", "sowmyaganesan_11@yahoo.com"};
+    	List<String> to = new ArrayList<String>();
+    	to.add("sowmister@gmail.com");
+    	to.add("sowmyaganesan_11@yahoo.com");
     	 inviteemails.setEmailaddress(to);
+    	 inviteemails.setSenderemail("sowmister@gmail.com");
         ResteasyClient client = new ResteasyClientBuilder().build();
         ResteasyWebTarget target = client.target("http://localhost:8080/TrustBasedRecommendation/friends/invitefriends");
         Response response;
@@ -97,18 +104,18 @@ public class RestClient {
         
     }
 	
-	private static void addfriends()
+	private static void addTrustscoretofriend()
 
     {
 		TrustScoreCollection trustScoreCollection = new TrustScoreCollection();
-		trustScoreCollection.setFriend("vidya@gmail.com");
+		trustScoreCollection.setFriend("sowmyaganesan_11@yahoo.com");
 		trustScoreCollection.setUser("sowmister@gmail.com");
 		trustScoreCollection.setCategory("movies");
 		trustScoreCollection.setExplicit("true");
 		trustScoreCollection.setTrustscore(5);
 		
         ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target("http://localhost:8080/TrustBasedRecommendation/friends/addfriends");
+        ResteasyWebTarget target = client.target("http://localhost:8080/TrustBasedRecommendation/friends/addTrustscoretofriend");
         Response response;
 		try {
 			response = target.request().post(Entity.entity(trustScoreCollection,"application/json"));
@@ -122,11 +129,37 @@ public class RestClient {
         
     }
 	
-	private static void removefriends()
+	private static void updateTrustscoretofriend()
+
+    {
+		TrustScoreCollection trustScoreCollection = new TrustScoreCollection();
+		trustScoreCollection.setFriend("sowmyaganesan_11@yahoo.com");
+		trustScoreCollection.setUser("sowmister@gmail.com");
+		trustScoreCollection.setCategory("movies");
+		trustScoreCollection.setExplicit("true");
+		trustScoreCollection.setTrustscore(4);
+		
+        ResteasyClient client = new ResteasyClientBuilder().build();
+        ResteasyWebTarget target = client.target("http://localhost:8080/TrustBasedRecommendation/friends/updateTrustscoretofriend");
+        Response response;
+		try {
+			response = target.request().post(Entity.entity(trustScoreCollection,"application/json"));
+			//Read output in string format
+	        System.out.println(response.getStatus());
+	        response.close(); 
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+    }
+	
+	
+	private static void removefriendfromtrustnw()
 
     {
         ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target("http://localhost:8080/TrustBasedRecommendation/friends/removefriend?user=sowmister@gmail.com&friend=vidya@gmail.com");
+        ResteasyWebTarget target = client.target("http://localhost:8080/TrustBasedRecommendation/friends/removefriendfromtrustnw?user=sowmister@gmail.com&friend=sowmyaganesan_11@yahoo.com&category=Hotel");
         Response response;
 		try {
 			response = target.request().delete();
@@ -169,7 +202,7 @@ public class RestClient {
 		bookmarkcollection.setCategory("Farmer's Market");
 		bookmarkcollection.setName("Farmer's2");
 		bookmarkcollection.setLocation("San Jose2");
-		bookmarkcollection.setEmail("sowmister@gmail.com");
+		bookmarkcollection.setEmail("vidya@gmail.com");
 		bookmarkcollection.setStats("100 Likes");
 		bookmarkcollection.setStatus("Tried");
 		bookmarkcollection.setTried(true);
@@ -216,8 +249,8 @@ public class RestClient {
 		{
 			User user = new User();
 			user.setCity("sanjose");
-			user.setName("vidya");
-			user.setEmail("vidya@gmail.com");
+			user.setName("Sowmy");
+			user.setEmail("sowmyaganesan_11@yahoo.com");
 			user.setZip(95051);
 			user.setPasswrd("1234");
 			ResteasyClient client = new ResteasyClientBuilder().build();
